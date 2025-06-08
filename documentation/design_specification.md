@@ -84,3 +84,39 @@ It discovers key material (file-based, keyless Fulcio cert, or HSM), spawns `cos
 #### UC S-2 — Sign local file & push `.sig` to OCI registry
 
 ![Signer UC S-2](./seq_signer_s2.png)
+
+## Verifier
+
+### Role Description
+The **Verifier** confirms artifact integrity and authenticity.  
+It retrieves detached signatures or attestations—either from the local filesystem or an OCI registry—then invokes `cosign verify` / `verify-blob` / `verify-attestation`. Optional policy filters (certificate identity, OIDC issuer, annotation key-value) and Rekor inclusion proofs can be enforced to meet stricter supply-chain requirements. Results are returned as a structured `VerificationResult` object.
+
+> **Component diagram:** see §Reference Architecture → Verifier.
+
+---
+
+### Use Cases
+
+| UC-ID | Title | Inputs | Notes |
+|-------|-------|--------|-------|
+| **V-1** | Verify local file with detached `.sig` | `file`, `file.sig` | Offline verification, no registry required |
+| **V-2** | Verify OCI image signature in registry | Image reference | Uses registry-native `<digest>.sig` layer |
+| V-3 | Verify local bundle offline (`.sig.bundle`) | `file`, `file.sig.bundle` | No Rekor connectivity needed |
+| V-4 | Verify OCI attestation in registry | Image reference | `cosign verify-attestation` |
+| V-5 | Verify attestation bundle offline | `.att`, `.bundle` | Works in air-gapped mode |
+| V-6 | Policy-based verify (cert/email/issuer/annotations) | Artifact ref + policy | Extends V-1/2/4 |
+| V-7 | Batch / parallel verify many refs | List of refs | Async pool |
+
+![Verifier Use Case](./use_case_verifier.png)
+
+---
+
+### Sequence Diagrams
+
+#### UC V-1 — Verify local file with detached `.sig`
+
+![Verifier UC S-1](./seq_verifier_v1.png)
+
+#### UC V-2 — Verify OCI image signature in registry
+
+![Verifier UC S-2](./seq_verifier_v2.png)

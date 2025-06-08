@@ -1,0 +1,17 @@
+@startuml Seq_Verifier_V2
+!theme plain
+actor User
+participant Verifier      as "pyCosign.Verifier"
+participant RegistryCLI   as "pyCosign.RegistryClient"
+database   Registry       as "OCI Registry"
+participant CosignCLI     as "cosign verify"
+
+User -> Verifier : verify_registry(ref)
+Verifier -> RegistryCLI : pull_signature(ref)
+RegistryCLI -> Registry : GET <digest>.sig
+Registry --> RegistryCLI : *.sig
+RegistryCLI --> Verifier : sig bytes
+Verifier -> CosignCLI : cosign verify ref
+CosignCLI --> Verifier : verified?
+Verifier --> User : VerificationResult{verified}
+@enduml

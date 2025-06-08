@@ -1,16 +1,23 @@
 @startuml UC_Signer
 !theme plain
+skinparam usecase {
+  BackgroundColor<<Local>> LightGray
+  BackgroundColor<<Registry>> Wheat
+  BackgroundColor<<Keyless>> LightBlue
+  BackgroundColor<<Batch>> Thistle
+}
+
 actor Developer
 actor "CI/CD Runner" as CICD
 
 package "pyCosign::Signer" {
-  usecase "S-1  Sign & save locally" as S1
-  usecase "S-2  Sign & push to registry" as S2
-  usecase "S-3  Sign OCI image in-place" as S3
-  usecase "S-4  Sign & Rekor only" as S4
-  usecase "S-5  Keyless sign, save locally" as S5
-  usecase "S-6  HSM sign\npush to registry" as S6
-  usecase "S-7  Batch parallel sign" as S7
+  usecase "S-1  Sign & save locally\n📁 file + .sig\n🕵️ Offline mode" as S1 <<Local>>
+  usecase "S-2  Sign & push to registry\n📦 Image ref\n🔐 Push .sig layer" as S2 <<Registry>>
+  usecase "S-3  Sign OCI image in-place\n📦 Image ref\n⚠️ Requires writable registry" as S3 <<Registry>>
+  usecase "S-4  Sign & Rekor only\n📄 Metadata + log\n📝 No file output" as S4 <<Registry>>
+  usecase "S-5  Keyless sign, save locally\n🔑 Sigstore OIDC\n📁 file.sig" as S5 <<Keyless>>
+  usecase "S-6  HSM sign\n📦 Registry push\n🔐 Hardware key" as S6 <<Registry>>
+  usecase "S-7  Batch parallel sign\n🧾 List of targets\n⚙️ Async pool" as S7 <<Batch>>
 }
 
 Developer --> S1
