@@ -1,0 +1,13 @@
+@startuml Seq_Signer_S1
+!theme plain
+actor Developer
+participant Signer        as "pyCosign.Signer"
+participant CosignCLI     as "cosign sign-blob"
+participant FS            as "File System"
+
+Developer -> Signer : sign_blob_local(path, key)
+Signer -> CosignCLI : cosign sign-blob --key key.pem path
+CosignCLI --> Signer : base64_sig
+Signer -> FS : write path.sig
+Signer --> Developer : Signature{sig_path}
+@enduml

@@ -49,3 +49,38 @@ The **Attester** attaches supply-chain metadata (SPDX, CycloneDX, in-toto predic
 | **Verifier** | Validate signatures / attestations—including optional policy checks—and, when online, confirm Rekor inclusion proofs. | `verify_local` · `verify_registry` · `verify_attestation` |
 | **Attester** | Attach supply-chain metadata (SPDX, CycloneDX, in-toto predicates) to artifacts and persist detached `*.att` layers. | `attest_blob_local` · `attest_blob_and_push` · `attest_artifact` |
 
+## Signer
+
+### Role Description
+The **Signer** generates tamper-evident signatures for files or OCI digests.  
+It discovers key material (file-based, keyless Fulcio cert, or HSM), spawns `cosign sign` / `sign-blob`, and stores detached `*.sig` layers according to runtime configuration—local filesystem, OCI registry, and/or a Rekor bundle.
+
+> **Component diagram:** see §Reference Architecture → Signer.
+
+---
+
+### Use Cases
+
+| UC-ID | Title | Storage Target | Key Source |
+|-------|-------|----------------|------------|
+| **S-1** | Sign local file & save `.sig` locally | Filesystem | Key file |
+| **S-2** | Sign local file & push `.sig` to OCI registry | OCI registry | Key file |
+| S-3 | Sign OCI image already in registry | OCI registry | Key file |
+| S-4 | Sign local file & upload **only** Rekor bundle | Rekor | Key file |
+| S-5 | Keyless sign local file & save `.sig` locally | Filesystem | Fulcio cert |
+| S-6 | HSM sign local file & push `.sig` to registry | OCI registry | PKCS #11 |
+| S-7 | Parallel-sign multiple artifacts (async pool) | User-selected | any |
+
+![Signer Use Case](./use_case_signer.png)
+
+---
+
+### Sequence Diagrams
+
+#### UC S-1 — Sign local file & save `.sig` locally
+
+![Signer UC S-1](./seq_signer_s1.png)
+
+#### UC S-2 — Sign local file & push `.sig` to OCI registry
+
+![Signer UC S-2](./seq_signer_s2.png)

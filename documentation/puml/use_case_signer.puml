@@ -1,0 +1,25 @@
+@startuml UC_Signer
+!theme plain
+actor Developer
+actor "CI/CD Runner" as CICD
+
+package "pyCosign::Signer" {
+  usecase "S-1  Sign & save locally" as S1
+  usecase "S-2  Sign & push to registry" as S2
+  usecase "S-3  Sign OCI image in-place" as S3
+  usecase "S-4  Sign & Rekor only" as S4
+  usecase "S-5  Keyless sign, save locally" as S5
+  usecase "S-6  HSM sign\npush to registry" as S6
+  usecase "S-7  Batch parallel sign" as S7
+}
+
+Developer --> S1
+Developer --> S2
+Developer --> S4
+Developer --> S5
+Developer --> S6
+CICD --> S2
+CICD --> S3
+CICD --> S4
+CICD --> S7
+@enduml
