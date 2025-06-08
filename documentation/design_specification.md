@@ -120,3 +120,39 @@ It retrieves detached signatures or attestations—either from the local filesys
 #### UC V-2 — Verify OCI image signature in registry
 
 ![Verifier UC V-2](./images/seq_verifier_v2.png)
+
+## Attester
+
+### Role Description
+The **Attester** enriches artifacts with cryptographically signed **supply-chain metadata**.  
+Given a predicate (e.g., SPDX SBOM, CycloneDX, in-toto statement), it spawns `cosign attest` / `attest-blob` to create a detached `*.att` layer. The attestation can be saved locally, pushed to an OCI registry alongside the artifact digest, and/or bundled into Rekor for transparency. Down-stream consumers can then validate provenance and SBOM data via the Verifier role.
+
+> **Component diagram:** see §Reference Architecture → Attester.
+
+---
+
+### Use Cases
+
+| UC-ID | Title | Predicate Example | Storage Target | Key Source |
+|-------|-------|-------------------|----------------|------------|
+| **A-1** | Create attestation for local file, save `.att` locally | Custom JSON | Filesystem | Key file |
+| **A-2** | Create attestation for local file & push `.att` to OCI registry | SPDX SBOM | OCI registry | Key file |
+| A-3 | Create attestation & upload **only** Rekor bundle | Any | Rekor | Key file |
+| A-4 | Attest OCI image already in registry | CycloneDX | OCI registry | Key file |
+| A-5 | Keyless attestation, save `.att` locally | Any | Filesystem | Fulcio cert |
+| A-6 | Batch generate attestations for many digests | Any | User-selected | any |
+| A-7 | Attest with HSM & push `.att` to registry | Any | OCI registry | PKCS #11 |
+
+![Attester Use Case](./images/use_case_attester.png)
+
+---
+
+### Sequence Diagrams
+
+#### UC A-1 — Create attestation for local file, save `.att` locally
+
+![Attester UC A-1](./images/seq_attester_a1.png)
+
+#### UC A-2 — Create attestation for local file & push `.att` to OCI registry
+
+![Attester UC A-2](./images/seq_attester_a2.png)
