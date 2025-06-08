@@ -1,0 +1,20 @@
+@startuml Component_pyCosign_Attester
+!theme plain
+package "pyCosign" {
+  [Attester]
+  [KeyManager]
+  [RegistryClient]
+}
+component "cosign (executable)" as CosignCLI
+package "Sigstore Services" {
+  [Fulcio CA]
+  [Rekor Transparency Log]
+}
+database "OCI Registry" as Registry
+[Attester] ..> [KeyManager]
+[Attester] --> CosignCLI      : spawn\ncosign attest
+[Attester] --> [RegistryClient] : push *.att
+[KeyManager] ..> [Fulcio CA]   : keyless cert (opt.)
+[Attester] ..> [Rekor Transparency Log] : upload bundle
+[RegistryClient] <--> Registry : push *.att
+@enduml

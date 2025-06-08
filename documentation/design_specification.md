@@ -22,4 +22,21 @@ _pyCosign_ offers a **thin, class-based wrapper** that orchestrates the trusted 
 
 > ⚠️ This document intentionally limits itself to the _foundational_ use-cases required in sprint 1. More advanced flows (HSM, batch, policy-verify) appear only as placeholders.
 
+## Reference Architecture
+The _pyCosign_ runtime is organized around **three orthogonal roles — Signer, Verifier, and Attester** — that share a `KeyManager` for credential handling and a `RegistryClient` for OCI I/O. Each role calls the local `cosign` executable to perform cryptographic work; the Python layer concentrates on orchestration, storage decisions (local FS / OCI registry / Rekor), and observable logging.  
 
+### Component Views
+#### Signer
+The **Signer** produces tamper-evident signatures for files or OCI digests. It discovers keys (or fetches a keyless Fulcio cert), invokes `cosign sign`/`sign-blob`, and persists detached `*.sig` layers to the chosen backend—filesystem, OCI registry, and/or Rekor bundle.  
+
+![Component pyCosign Signer](./component_pycosign_signer.png)
+
+#### Verifier
+The **Verifier** confirms artifact integrity by fetching signatures (local or OCI), calling `cosign verify`/`verify-blob`, applying optional policy filters (cert identity, issuer, annotations), and—if online—checking Rekor inclusion proofs. It returns a structured `VerificationResult` with verdict and log indexes.  
+
+![Component pyCosign Verifier](./component_pycosign_verifier.png)
+
+#### Attester
+The **Attester** attaches supply-chain metadata (SPDX, CycloneDX, in-toto predicates). Given a predicate file, it calls `cosign attest`/`attest-blob` to create a signed `*.att` layer, which can be saved locally, pushed to an OCI registry, and/or bundled into Rekor for transparency.  
+
+![Component pyCosign Attester](./component_pycosign_attester.png)
