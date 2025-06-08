@@ -156,3 +156,19 @@ Given a predicate (e.g., SPDX SBOM, CycloneDX, in-toto statement), it spawns `co
 #### UC A-2 — Create attestation for local file & push `.att` to OCI registry
 
 ![Attester UC A-2](./images/seq_attester_a2.png)
+
+## Glossary
+
+| Term | Definition |
+|------|------------|
+| **Artifact** | Any file (e.g., binary, SBOM) or OCI manifest digest that can be signed or attested. |
+| **Detached signature (`*.sig`)** | Base-64 SLSA signature stored separately from the artifact—produced by `cosign sign`/`sign-blob`. |
+| **Attestation (`*.att`)** | A signed statement—often SBOM or in-toto predicate—linking metadata to an artifact via `cosign attest`. |
+| **Predicate** | JSON document that describes the attestation content (SPDX, CycloneDX, provenance, etc.). |
+| **Bundle (`*.bundle`)** | Rekor inclusion proof packaged with a signature/attestation for offline verification. |
+| **Fulcio** | Sigstore certificate authority that issues short-lived keyless X.509 certificates. |
+| **Rekor** | Sigstore transparency log—an append-only Merkle tree that stores signature/attestation bundles. |
+| **Keyless Signing** | Flow where a signer obtains an ephemeral certificate from Fulcio instead of using a local key pair. |
+| **PKCS #11 / HSM** | Hardware Security Module interface allowing cosign to use hardware-protected private keys. |
+| **OCI Registry** | Container registry that can store arbitrary blobs, signatures (`<digest>.sig`) and attestations (`<digest>.att`). |
+| **`cosign`** | CLI tool from the Sigstore project used for signing, verifying, and attesting artifacts. |
