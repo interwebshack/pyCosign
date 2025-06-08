@@ -40,3 +40,12 @@ The **Verifier** confirms artifact integrity by fetching signatures (local or OC
 The **Attester** attaches supply-chain metadata (SPDX, CycloneDX, in-toto predicates). Given a predicate file, it calls `cosign attest`/`attest-blob` to create a signed `*.att` layer, which can be saved locally, pushed to an OCI registry, and/or bundled into Rekor for transparency.  
 
 ![Component pyCosign Attester](./component_pycosign_attester.png)
+
+## Role Overview
+
+| Role | Responsibility | Primary Public Methods |
+|------|----------------|------------------------|
+| **Signer** | Produce signatures for local files or OCI digests and store them per configuration (filesystem, registry, Rekor). | `sign_blob_local` · `sign_blob_and_push` · `sign_artifact` |
+| **Verifier** | Validate signatures / attestations—including optional policy checks—and, when online, confirm Rekor inclusion proofs. | `verify_local` · `verify_registry` · `verify_attestation` |
+| **Attester** | Attach supply-chain metadata (SPDX, CycloneDX, in-toto predicates) to artifacts and persist detached `*.att` layers. | `attest_blob_local` · `attest_blob_and_push` · `attest_artifact` |
+
