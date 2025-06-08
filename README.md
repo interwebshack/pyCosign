@@ -1,9 +1,9 @@
 # pyCosign
 
-> A Pythonic façade around the 🎯 **Sigstore `cosign` CLI** — sign, attest, and verify artifacts from pure Python or the command line.
+> A Pythonic façade around the **Sigstore `cosign` CLI** — sign, attest, and verify artifacts from pure Python or the command line.
 
-[![Build](https://img.shields.io/github/actions/workflow/status/your-org/pycosign/ci.yml?branch=main)](https://github.com/your-org/pycosign/actions)
-[![License](https://img.shields.io/github/license/your-org/pycosign)](LICENSE)
+[![Build](https://img.shields.io/github/actions/workflow/status/interwebshack/pycosign/ci.yml?branch=main)](https://github.com/interwebshack/pycosign/actions)
+[![License](https://img.shields.io/github/license/interwebshack/pycosign)](LICENSE)
 
 ---
 
