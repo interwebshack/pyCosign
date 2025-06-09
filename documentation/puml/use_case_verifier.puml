@@ -1,0 +1,30 @@
+@startuml UC_Verifier
+!theme plain
+skinparam usecase {
+  BackgroundColor<<Offline>> LightGray
+  BackgroundColor<<Registry>> Wheat
+  BackgroundColor<<Policy>> LightBlue
+  BackgroundColor<<Batch>> Thistle
+}
+
+actor User
+actor Auditor
+
+package "pyCosign::Verifier" {
+  usecase "V-1  Verify local sig\n📁 file + .sig\n🕵️ Offline mode" as V1 <<Offline>>
+  usecase "V-2  Verify registry sig\n📦 Image ref\n🔐 .sig layer in registry" as V2 <<Registry>>
+  usecase "V-3  Verify bundle offline\n📁 file + .sig.bundle\n🕵️ Air-gapped OK" as V3 <<Offline>>
+  usecase "V-4  Verify registry attestation\n📦 Image ref\n📜 Attestation in registry" as V4 <<Registry>>
+  usecase "V-5  Verify attestation bundle\n📁 .att + .bundle\n🕵️ Air-gapped OK" as V5 <<Offline>>
+  usecase "V-6  Policy-based verify\n📋 Policy + Ref\n✅ Cert/email/issuer match" as V6 <<Policy>>
+  usecase "V-7  Batch verify\n🧾 List of refs\n⚙️ Parallel pool" as V7 <<Batch>>
+}
+
+User --> V1
+User --> V2
+User --> V3
+Auditor --> V4
+Auditor --> V5
+Auditor --> V6
+Auditor --> V7
+@enduml

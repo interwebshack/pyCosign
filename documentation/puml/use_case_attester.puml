@@ -1,0 +1,32 @@
+@startuml UC_Attester
+!theme plain
+skinparam usecase {
+  BackgroundColor<<Local>> LightGray
+  BackgroundColor<<Registry>> Wheat
+  BackgroundColor<<Keyless>> LightBlue
+  BackgroundColor<<Batch>> Thistle
+  BackgroundColor<<Rekor>> Moccasin
+}
+
+actor Developer
+actor BuildSystem
+
+package "pyCosign::Attester" {
+  usecase "A-1  Local attestation\n📄 JSON → .att\n🗂️ FS storage, key file" as A1 <<Local>>
+  usecase "A-2  Attest & push registry\n🧾 SPDX SBOM\n📦 Push .att to OCI" as A2 <<Registry>>
+  usecase "A-3  Rekor-only attestation\n📄 Any format\n📤 Upload to Rekor" as A3 <<Rekor>>
+  usecase "A-4  Attest OCI image\n📦 CycloneDX SBOM\n🖋️ Sign existing image" as A4 <<Registry>>
+  usecase "A-5  Keyless attestation local\n📄 Any\n🔑 Fulcio cert + .att" as A5 <<Keyless>>
+  usecase "A-6  Batch attest\n🧾 List of digests\n⚙️ Parallel attest, any store" as A6 <<Batch>>
+  usecase "A-7  HSM attest & push\n📦 OCI registry\n🔐 PKCS #11 key" as A7 <<Registry>>
+}
+
+Developer --> A1
+Developer --> A2
+Developer --> A3
+Developer --> A5
+BuildSystem --> A2
+BuildSystem --> A4
+BuildSystem --> A6
+BuildSystem --> A7
+@enduml

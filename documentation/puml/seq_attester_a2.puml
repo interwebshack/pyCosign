@@ -1,0 +1,18 @@
+@startuml Seq_Attester_A2
+!theme plain
+actor Developer
+participant Attester      as "pyCosign.Attester"
+participant CosignCLI     as "cosign attest-blob"
+participant FS            as "File System"
+participant RegistryCLI   as "pyCosign.RegistryClient"
+database   Registry       as "OCI Registry"
+
+Developer -> Attester : attest_blob_and_push(path,\npredicate.json,key,ref)
+Attester -> CosignCLI : cosign attest-blob --predicate predicate.json path
+CosignCLI --> Attester : base64_att
+Attester -> FS : write path.att
+Attester -> RegistryCLI : push_attestation(path.att, ref)
+RegistryCLI -> Registry : PUT  <digest>.att
+Registry --> RegistryCLI : 201 Created
+Attester --> Developer : Attestation{att_ref}
+@enduml

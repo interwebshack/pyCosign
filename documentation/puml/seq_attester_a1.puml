@@ -1,0 +1,13 @@
+@startuml Seq_Attester_A1
+!theme plain
+actor Developer
+participant Attester      as "pyCosign.Attester"
+participant CosignCLI     as "cosign attest-blob"
+participant FS            as "File System"
+
+Developer -> Attester : attest_blob_local(path,\npredicate.json,key)
+Attester -> CosignCLI : cosign attest-blob --predicate predicate.json path
+CosignCLI --> Attester : base64_att
+Attester -> FS : write path.att
+Attester --> Developer : Attestation{att_path}
+@enduml

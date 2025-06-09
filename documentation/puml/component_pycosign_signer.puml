@@ -1,0 +1,20 @@
+@startuml Component_pyCosign_Signer
+!theme plain
+package "pyCosign" {
+  [Signer]
+  [KeyManager]
+  [RegistryClient]
+}
+component "cosign (executable)" as CosignCLI
+package "Sigstore Services" {
+  [Fulcio CA]
+  [Rekor Transparency Log]
+}
+database "OCI Registry" as Registry
+[Signer] ..> [KeyManager]
+[Signer] --> CosignCLI      : spawn\ncosign sign
+[Signer] --> [RegistryClient] : push *.sig
+[KeyManager] ..> [Fulcio CA] : keyless cert (opt.)
+[Signer] ..> [Rekor Transparency Log] : upload bundle
+[RegistryClient] <--> Registry : push *.sig
+@enduml

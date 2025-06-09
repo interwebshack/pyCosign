@@ -1,0 +1,18 @@
+@startuml Seq_Signer_S2
+!theme plain
+actor Developer
+participant Signer        as "pyCosign.Signer"
+participant CosignCLI     as "cosign sign-blob"
+participant FS            as "File System"
+participant RegistryCLI   as "pyCosign.RegistryClient"
+database   Registry       as "OCI Registry"
+
+Developer -> Signer : sign_blob_and_push(path, key, ref)
+Signer -> CosignCLI : cosign sign-blob --key key.pem path
+CosignCLI --> Signer : base64_sig
+Signer -> FS : write path.sig
+Signer -> RegistryCLI : push(path.sig, ref)
+RegistryCLI -> Registry : PUT  <digest>.sig
+Registry --> RegistryCLI : 201 Created
+Signer --> Developer : Signature{sig_ref}
+@enduml
