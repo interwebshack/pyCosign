@@ -36,3 +36,5 @@ jobs:
         run: poetry install
       - name: Run Black in check mode
         run: poetry run black --check --verbose pycosign
+      - name: Run Isort in check mode
+        run: poetry run isort --verbose pycosign

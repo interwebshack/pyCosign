@@ -100,14 +100,18 @@ The `-s` flag adds the required `Signed-off-by` line.
 ## Coding Style
 
 * **ruff** for linting (`black`, `isort`, `flake8` rules)
-* **black** for formatting (PEP 8 compliant)
-* **mypy** for static typing
 * Docstrings follow **Google style**.
 
 Run all checks:
 
+* **black** for formatting (PEP 8 compliant).
 ```bash
-invoke style
+poetry run black --verbose pycosign
+```
+
+* **isort** your imports, so you don't have to.
+```bash
+poetry run isort --verbose pycosign
 ```
 
 ## Testing

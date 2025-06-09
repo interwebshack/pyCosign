@@ -29,3 +29,7 @@ pycosign = "pycosign.cli:main"
 [tool.black]
 line-length = 100
 target-version = ['py310', 'py311', 'py312']
+
+[tool.isort]
+# https://pycqa.github.io/isort/docs/configuration/black_compatibility/
+profile = "black"
