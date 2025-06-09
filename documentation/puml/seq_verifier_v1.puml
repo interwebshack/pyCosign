@@ -1,0 +1,13 @@
+@startuml Seq_Verifier_V1
+!theme plain
+actor User
+participant Verifier      as "pyCosign.Verifier"
+participant CosignCLI     as "cosign verify-blob"
+participant FS            as "File System"
+
+User -> Verifier : verify_local(path, path.sig)
+Verifier -> FS : read file + sig
+Verifier -> CosignCLI : cosign verify-blob --signature path.sig path
+CosignCLI --> Verifier : exit 0 / err
+Verifier --> User : VerificationResult{verified}
+@enduml

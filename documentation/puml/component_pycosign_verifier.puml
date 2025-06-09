@@ -1,0 +1,18 @@
+@startuml Component_pyCosign_Verifier
+!theme plain
+package "pyCosign" {
+  [Verifier]
+  [KeyManager]
+  [RegistryClient]
+}
+component "cosign (executable)" as CosignCLI
+package "Sigstore Services" {
+  [Rekor Transparency Log]
+}
+database "OCI Registry" as Registry
+[Verifier] ..> [KeyManager]
+[Verifier] --> CosignCLI      : spawn\ncosign verify
+[Verifier] --> [RegistryClient] : pull *.sig
+[Verifier] --> [Rekor Transparency Log] : inclusion proof
+[RegistryClient] <--> Registry : pull *.sig
+@enduml
